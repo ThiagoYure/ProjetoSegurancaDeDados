@@ -163,4 +163,25 @@ public class UsuarioDao {
 
         return false;
     }
+    public boolean createPrivKey(byte[] privk, String email) {
+        try {
+            int retorno;
+            try (Connection con = ConFactory.getConnection()) {
+                PreparedStatement st = con.prepareStatement("INSERT INTO privkUsers (privk,user) VALUES(?,?)");
+                st.setBytes(1, privk);
+                st.setString(2, email);
+                retorno = st.executeUpdate();
+                st.close();
+            }
+            if (retorno > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
+    }
 }
