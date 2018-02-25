@@ -90,6 +90,7 @@ public class UsuarioDao {
         }
         return null;
     }
+
     public boolean createMessagem(String destinatario, String remetente, byte[] texto) {
         try {
             int retorno;
@@ -113,6 +114,7 @@ public class UsuarioDao {
 
         return false;
     }
+
     public ArrayList<Mensagem> readMensagens(String email) {
 
         try {
@@ -138,5 +140,27 @@ public class UsuarioDao {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean createPK(byte[] pk, String email) {
+        try {
+            int retorno;
+            try (Connection con = ConFactory.getConnection()) {
+                PreparedStatement st = con.prepareStatement("INSERT INTO pkUsers (pk,user) VALUES(?,?)");
+                st.setBytes(1, pk);
+                st.setString(2, email);
+                retorno = st.executeUpdate();
+                st.close();
+            }
+            if (retorno > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
     }
 }

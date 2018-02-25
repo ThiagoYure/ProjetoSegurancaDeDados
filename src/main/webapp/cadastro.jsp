@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : 22/02/2018, 23:42:37
+    Document   : cadastro
+    Created on : 24/02/2018, 20:48:12
     Author     : ThigoYure
 --%>
 
@@ -27,6 +27,12 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
+                        <input id="nick" type="text" class="validate">
+                        <label for="nick">Nick</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
                         <input id="password" type="password" class="validate">
                         <label for="password">Password</label>
                     </div>
@@ -35,10 +41,10 @@
                     <input class="light-blue waves-effect waves-light btn" type="submit" value="Entrar">
                 </div>
                 <div class="row">
-                    <div class="input-field col s12"><input type="hidden" name="controller" value="Login"></div>
+                    <div class="input-field col s12"><input type="hidden" name="controller" value="Cadastro"></div>
                 </div>
                 <div class="row center-align">
-                    Novo no Tatooine? Crie sua conta <a href="cadastro.jsp">aqui</a>
+                    Já possui conta? Acesse o sistema aqui <a href="login.jsp">aqui</a>
                 </div>
             </form>
         </div>
@@ -46,3 +52,4 @@
         <script type="text/javascript" src="js/materialize.min.js"></script>
     </body>
 </html>
+

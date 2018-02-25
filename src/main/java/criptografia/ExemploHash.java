@@ -1,3 +1,5 @@
+package criptografia;
+
 
 
 import java.io.File;
@@ -8,6 +10,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ExemploHash {
+
+    public ExemploHash() {
+    }
 
 	
 	
@@ -72,60 +77,6 @@ public class ExemploHash {
 	}
 	
 	
-	/**
-	 * Aplicação 
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		
-		ExemploHash exemplo = new ExemploHash();
-
-		/*
-		 *  Para mensagens de texto (String)
-		 */
-		
-		byte[] mensagem = "Mensagem para gerar códigos de hash".getBytes(StandardCharsets.UTF_8);
-		
-		// Gerando hash SHA1
-	    System.out.println("\n -------------- \n SHA 1 \n --------------");
-		byte[] hashSHA1 = exemplo.gerarHashString(mensagem, "SHA-1");
-		System.out.println(exemplo.byteToString(hashSHA1));
-		
-		// Gerando hash SHA-256
-	    System.out.println("\n -------------- \n SHA-256 \n --------------");
-		byte[] hashSHA256 = exemplo.gerarHashString(mensagem, "SHA-256");
-		System.out.println(exemplo.byteToString(hashSHA256));
-		
-		// Gerando hash MD5
-	    System.out.println("\n -------------- \n MD5 \n --------------");
-		byte[] hashMD5 = exemplo.gerarHashString(mensagem, "MD5");
-		System.out.println(exemplo.byteToString(hashMD5));
-		
-
-		/*
-		 *  Para arquivos (binários)
-		 *  
-		 *  Comprovante:
-		 *  
-		 *  > md5sum commons-crypto-1.0.0.jar (Ubuntu)
-		 *  > 981c95e38457b10d429090496b96f2d6  commons-crypto-1.0.0.jar
-		 */
-		
-		File arquivoTeste = new File("C:\\Users\\ThigoYure\\Downloads\\seguranca-dados-master\\seguranca-dados-master\\commons-crypto-1.0.0.jar");
-		
-		// Gerando hash SHA1
-	    System.out.println("\n -------------- \n SHA 1 - ARQUIVOS \n --------------");
-		System.out.println(exemplo.gerarHashFile(arquivoTeste, "SHA-1"));
-		
-		// Gerando hash SHA-256
-	    System.out.println("\n -------------- \n SHA-256 - ARQUIVOS  \n --------------");
-		System.out.println(exemplo.gerarHashFile(arquivoTeste, "SHA-256"));
-		
-		// Gerando hash MD5
-	    System.out.println("\n -------------- \n MD5 - ARQUIVOS \n --------------");
-		System.out.println(exemplo.gerarHashFile(arquivoTeste, "MD5"));
-		
-	}
+	
 
 }
