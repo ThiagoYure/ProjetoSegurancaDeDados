@@ -31,7 +31,7 @@ class CadastroController implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ClassNotFoundException, IOException, ServletException {
         ExemploHash hash = new ExemploHash();
         String email = req.getParameter("email");
-        String senha = req.getParameter("senha");
+        String senha = req.getParameter("password");
         byte[] senhaCriptografada;
         ExemploRSA exemplo = new ExemploRSA();
         try {

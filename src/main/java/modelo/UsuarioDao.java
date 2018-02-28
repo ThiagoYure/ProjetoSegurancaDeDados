@@ -146,7 +146,7 @@ public class UsuarioDao {
         try {
             int retorno;
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("INSERT INTO pkUsers (pk,user) VALUES(?,?)");
+                PreparedStatement st = con.prepareStatement("INSERT INTO pkusers (key_pub,usuario) VALUES(?,?)");
                 st.setBytes(1, pk);
                 st.setString(2, email);
                 retorno = st.executeUpdate();
@@ -165,19 +165,17 @@ public class UsuarioDao {
     }
     public boolean createPrivKey(byte[] privk, String email) {
         try {
-            int retorno;
+            boolean retorno = true;
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("INSERT INTO privkUsers (privk,user) VALUES(?,?)");
+                PreparedStatement st = con.prepareStatement("INSERT INTO privkusers (key_priv,usuario) VALUES(?,?)");
                 st.setBytes(1, privk);
                 st.setString(2, email);
-                retorno = st.executeUpdate();
+                st.executeUpdate();
                 st.close();
             }
-            if (retorno > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            
+            return retorno;
+            
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }

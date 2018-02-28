@@ -18,22 +18,22 @@
     </head>
     <body>
         <div class="row">
-            <form class="col s12" action="frontController" method="POST">
+            <form class="col s12" action="FrontController" method="POST">
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="email" type="email" class="validate">
+                        <input name="email" type="email" class="validate">
                         <label for="email">Email</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="nick" type="text" class="validate">
+                        <input name="nick" type="text" class="validate">
                         <label for="nick">Nick</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="password" type="password" class="validate">
+                        <input name="password" type="password" class="validate">
                         <label for="password">Password</label>
                     </div>
                 </div>

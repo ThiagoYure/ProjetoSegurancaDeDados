@@ -37,15 +37,15 @@ public class FrontController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String controller = request.getParameter("controller");
         System.out.println(controller);
-        if (controller.equals("login")) {
+        if (controller.equals("Login")) {
             LoginController command = new LoginController();
             command.execute(request, response);
         }
-        if (controller.equals("cadastro")) {
+        if (controller.equals("Cadastro")) {
             CadastroController command = new CadastroController();
             command.execute(request, response);
         }
-        if (controller.equals("sair")) {
+        if (controller.equals("Sair")) {
             SairController command = new SairController();
             command.execute(request, response);
         }

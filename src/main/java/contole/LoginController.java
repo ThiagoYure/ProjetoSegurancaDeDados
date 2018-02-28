@@ -28,7 +28,7 @@ public class LoginController implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ClassNotFoundException, IOException, ServletException {
         String email = req.getParameter("email");
-        String senha = req.getParameter("senha");
+        String senha = req.getParameter("password");
         UsuarioDao dao;
         dao = new UsuarioDao();
         Usuario user = dao.read(email);
@@ -40,7 +40,6 @@ public class LoginController implements Command {
                 HttpSession session = req.getSession();
                 session.setAttribute("user", user);
                 System.out.println(session.getAttribute("user"));
-                res.sendRedirect("inicial.jsp");
             } else {
                 res.sendRedirect("index.jsp?error='Dados incorretos...'");
             }
