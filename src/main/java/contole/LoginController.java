@@ -8,6 +8,9 @@ package contole;
 import criptografia.ExemploHash;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,12 +39,21 @@ public class LoginController implements Command {
         if (user == null) {
             res.sendRedirect("index.jsp?error='Não há nenhum usuario cadastrado com esse email e senha.'");
         } else {
-            if (user.getEmail().equals(email) && hash.byteToString(user.getSenha()).equals(senha)) {
-                HttpSession session = req.getSession();
-                session.setAttribute("user", user);
-                System.out.println(session.getAttribute("user"));
-            } else {
-                res.sendRedirect("index.jsp?error='Dados incorretos...'");
+            System.out.println(user.getEmail());
+            System.out.println(hash.byteToString(user.getSenha()));
+            try {
+                String senhatest = hash.byteToString(hash.gerarHashString(senha.getBytes(), "MD5"));
+                System.out.println(senhatest);
+                if (user.getEmail().equals(email) && senhatest.equals(hash.byteToString(user.getSenha()))) {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("user", user);
+                    System.out.println(session.getAttribute("user"));
+                    res.sendRedirect("inicial.jsp");
+                } else {
+                    res.sendRedirect("index.jsp?error='Dados incorretos...'");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
