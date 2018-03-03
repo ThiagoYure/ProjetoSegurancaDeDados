@@ -2,21 +2,14 @@ create database MeChama;
 
 create table usuario (
 	email varchar(100),
-	senha bytea,
-	nick varchar(50),
+	senha bytea not null,
+	nick varchar(50) not null,
 	primary key (email)
 );
 
 create table pkUsers (
 	usuario varchar(100),
 	key_pub bytea,
-	primary key (usuario),
-	foreign key (usuario) references usuario(email)
-);
-
-create table privkUsers (
-	usuario varchar(100),
-	key_priv bytea,
 	primary key (usuario),
 	foreign key (usuario) references usuario(email)
 );
@@ -29,4 +22,10 @@ create table mensagem (
 	primary key (id),
 	foreign key (destinatario) references usuario(email),
 	foreign key (remetente) references usuario(email)
+)
+create table privkusers (
+	usuario varchar(100),
+	key_priv bytea,
+	primary key (usuario),
+	foreign key (usuario) references usuario(email)
 )

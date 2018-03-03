@@ -163,23 +163,64 @@ public class UsuarioDao {
 
         return false;
     }
+
     public boolean createPrivKey(byte[] privk, String email) {
+        System.out.println("oi");
         try {
-            boolean retorno = true;
+            int retorno;
             try (Connection con = ConFactory.getConnection()) {
                 PreparedStatement st = con.prepareStatement("INSERT INTO privkusers (key_priv,usuario) VALUES(?,?)");
                 st.setBytes(1, privk);
                 st.setString(2, email);
-                st.executeUpdate();
+                retorno = st.executeUpdate();
                 st.close();
             }
+            if(retorno>0){
+               return true; 
+            }else{
+                return false;
+            }
             
-            return retorno;
-            
+
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return false;
+    }
+
+    public byte[] readpk(String email) {
+
+        try {
+            try (Connection con = ConFactory.getConnection()) {
+                PreparedStatement st = con.prepareStatement("SELECT * FROM pkusers WHERE usuario = ?");
+                st.setString(1, email);
+                ResultSet r = st.executeQuery();
+                con.close();
+                st.close();
+                return r.getBytes("key_pub");
+
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    public byte[] readprivk(String email) {
+
+        try {
+            try (Connection con = ConFactory.getConnection()) {
+                PreparedStatement st = con.prepareStatement("SELECT * FROM privkusers WHERE usuario = ?");
+                st.setString(1, email);
+                ResultSet r = st.executeQuery();
+                con.close();
+                st.close();
+                return r.getBytes("key_priv");
+
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

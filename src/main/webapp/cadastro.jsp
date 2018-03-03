@@ -44,7 +44,7 @@
                     <div class="input-field col s12"><input type="hidden" name="controller" value="Cadastro"></div>
                 </div>
                 <div class="row center-align">
-                    Já possui conta? Acesse o sistema aqui <a href="login.jsp">aqui</a>
+                    Já possui conta? Acesse o sistema aqui <a href="index.jsp">aqui</a>
                 </div>
             </form>
         </div>

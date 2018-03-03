@@ -13,17 +13,19 @@ import java.util.Objects;
  * @author ThigoYure
  */
 public class Usuario {
+
     private String email;
     private byte[] senha;
     private String nick;
+
+    public Usuario() {
+    }
+    
 
     public Usuario(String email, byte[] senha, String nick) {
         this.email = email;
         this.senha = senha;
         this.nick = nick;
-    }
-
-    Usuario() {
     }
 
     public String getEmail() {
@@ -87,7 +89,5 @@ public class Usuario {
     public String toString() {
         return "Usuario{" + "email=" + email + ", senha=" + senha + ", nick=" + nick + '}';
     }
-    
-    
-    
+
 }

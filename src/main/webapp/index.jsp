@@ -38,7 +38,7 @@
                     <div class="input-field col s12"><input type="hidden" name="controller" value="Login"></div>
                 </div>
                 <div class="row center-align">
-                    Novo no Tatooine? Crie sua conta <a href="cadastro.jsp">aqui</a>
+                    Novo no Me Chama? Crie sua conta <a href="cadastro.jsp">aqui</a>
                 </div>
             </form>
         </div>

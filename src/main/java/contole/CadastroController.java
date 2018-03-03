@@ -5,6 +5,7 @@
  */
 package contole;
 
+import criptografia.ExemploAES;
 import criptografia.ExemploHash;
 import criptografia.ExemploRSA;
 import java.io.IOException;
@@ -34,6 +35,7 @@ class CadastroController implements Command {
         String senha = req.getParameter("password");
         byte[] senhaCriptografada;
         ExemploRSA exemplo = new ExemploRSA();
+        ExemploAES exemplo2 = new ExemploAES();
         try {
             KeyPair chaves = exemplo.geradorChaves();
             PublicKey chavePublica = chaves.getPublic();
@@ -47,8 +49,10 @@ class CadastroController implements Command {
             } else {
                 if (dao.read(email) == null) {
                     if (dao.create(novoUser)) {
-                        dao.createPK(hash.gerarHashString(chavePublica.getEncoded(),"MD5"), email);
-                        dao.createPrivKey(hash.gerarHashString(chavePrivada.getEncoded(),"MD5"), email);
+                        byte[] pk = exemplo2.criptografarArquivo(chavePublica.getEncoded());
+                        byte[] prk = exemplo2.criptografarArquivo(chavePrivada.getEncoded());
+                        boolean createPK = dao.createPK(pk, email);
+                        boolean createPrivKey = dao.createPrivKey(prk, email);
                         res.sendRedirect("index.jsp");
                     } else {
                         res.sendRedirect("cadastro.jsp?msg='Falha ao criar nova conta...Recarregue a página e tente novamente.'");
