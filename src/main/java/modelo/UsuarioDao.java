@@ -121,7 +121,7 @@ public class UsuarioDao {
 
         try {
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE (destinatario = ? or remetente = ?)and(destinatario = ? or remetente = ?) order by(id)[asc]");
+                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE (destinatario = ? or remetente = ?)and(destinatario = ? or remetente = ?) order by id asc");
                 st.setString(1, usuario);
                 st.setString(2, usuario);
                 st.setString(3, contato);
@@ -137,6 +137,7 @@ public class UsuarioDao {
                     byte[] textoCrip = r.getBytes("texto");
                     String textoDescrip = new String(aes.descriptografarArquivo(textoCrip),"ISO-8859-1");
                     msg.setTexto(textoDescrip);
+                    System.out.println(textoDescrip);
                     resultado.add(msg);
                 }
                 con.close();

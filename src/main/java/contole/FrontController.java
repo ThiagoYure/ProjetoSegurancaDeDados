@@ -45,6 +45,10 @@ public class FrontController extends HttpServlet {
             CadastroController command = new CadastroController();
             command.execute(request, response);
         }
+        if (controller.equals("EnviarMensagem")) {
+            EnviarMensagemController command = new EnviarMensagemController();
+            command.execute(request, response);
+        }
         if (controller.equals("Sair")) {
             SairController command = new SairController();
             command.execute(request, response);
