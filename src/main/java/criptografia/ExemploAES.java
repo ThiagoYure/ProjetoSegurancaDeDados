@@ -9,18 +9,16 @@ package criptografia;
  *
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class ExemploAES {
 
+    public ExemploAES() {
+    }
+    
     // definindo o algoritmo de criptgrafia (simétrico) com AES
     private static final String ALGORITHM = "AES";
 
@@ -31,8 +29,6 @@ public class ExemploAES {
      * Criptografar o arquivo com o algoritmo AES.
      *
      */
-    public ExemploAES() {
-    }
 
     public byte[] criptografarArquivo(byte[] conteudo) throws Exception {
 

@@ -20,4 +20,26 @@
           <listener-class>com.mycompany.TagLibListener</listener-class> 
       </listener>
     -->
+  <tag>
+    <name>Contatos</name>
+    <tag-class>handlers.Contatos</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
+  <tag>
+    <name>Mensagens</name>
+    <tag-class>handlers.Mensagens</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>usuario</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <name>destinatario</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
 </taglib>

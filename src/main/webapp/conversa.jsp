@@ -1,7 +1,7 @@
 <%-- 
-    Document   : inicial
-    Created on : 02/03/2018, 22:47:19
-    Author     : ThigoYure
+    Document   : conversa
+    Created on : 03/03/2018, 15:53:28
+    Author     : Ricarte
 --%>
 
 <%@taglib prefix="MyTags" uri="/tlds/MyTags" %>
@@ -18,15 +18,13 @@
     </head>
     <body class="light-blue accent-3">
         <ul class="collection">
-            <MyTags:Contatos/>
-            <c:forEach var='contato' items='${Contatos}'>
-                <a href='conversa.jsp?emailCont=${contato.email}'>
-                    <li class='collection-item avatar amber darken-3 white-text'>
-                        <p> <b>Nick:</b>${contato.nick}</br>
-                            <b>Email:</b> ${contato.email}</br>
-                        </p>
-                    </li>
-                </a>
+            <MyTags:Mensagens usuario="${user.email}" destinatario="${param.emailCont}"/>
+            <c:forEach var='mensagem' items='${Mensagens}'>
+                <li class='collection-item avatar amber darken-3 white-text'>
+                    <p> <b></b>${remetente.email}</br>
+                        <b></b> ${mensagem.texto}</br>
+                    </p>
+                </li>
                 <div class="divider"></div>
             </c:forEach>
         </ul>
@@ -39,3 +37,4 @@
         <script type="text/javascript" src="js/materialize.min.js"></script>
     </body>
 </html>
+

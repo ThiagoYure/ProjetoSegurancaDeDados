@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package modelo;
-
+import criptografia.ExemploAES;
 import factory.ConFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,8 +74,8 @@ public class UsuarioDao {
                 PreparedStatement st = con.prepareStatement("SELECT * FROM usuario");
                 ResultSet r = st.executeQuery();
                 ArrayList<Usuario> resultado = new ArrayList<>();
-                Usuario user = new Usuario();
                 while (r.next()) {
+                    Usuario user = new Usuario();
                     user.setEmail(r.getString("email"));
                     user.setNick(r.getString("nick"));
                     user.setSenha(r.getBytes("senha"));
@@ -91,15 +91,17 @@ public class UsuarioDao {
         return null;
     }
 
-    public boolean createMessagem(String destinatario, String remetente, byte[] texto) {
+    public boolean createMessagem(String destinatario, String remetente, String texto) throws Exception {
         try {
             int retorno;
+            ExemploAES aes = new ExemploAES();
             try (Connection con = ConFactory.getConnection()) {
                 PreparedStatement st = con.prepareStatement("INSERT INTO mensagem (destinatario,remetente,"
                         + "texto) VALUES(?,?,?)");
                 st.setString(1, destinatario);
                 st.setString(2, remetente);
-                st.setBytes(3, texto);
+                byte[] textoCrip = aes.criptografarArquivo(texto.getBytes());
+                st.setBytes(3, textoCrip);
                 retorno = st.executeUpdate();
                 st.close();
             }
@@ -115,12 +117,16 @@ public class UsuarioDao {
         return false;
     }
 
-    public ArrayList<Mensagem> readMensagens(String email) {
+    public ArrayList<Mensagem> readMensagens(String usuario, String contato) throws Exception {
 
         try {
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE destinatario=? OR remetente=? limit 10 order by[desc]");
-                st.setString(1, email);
+                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE (destinatario = ? or remetente = ?)and(destinatario = ? or remetente = ?) order by(id)[asc]");
+                st.setString(1, usuario);
+                st.setString(2, usuario);
+                st.setString(3, contato);
+                st.setString(4, contato);
+                ExemploAES aes = new ExemploAES();
                 ArrayList<Mensagem> resultado = new ArrayList<>();
                 ResultSet r = st.executeQuery();
                 while (r.next()) {
@@ -128,7 +134,9 @@ public class UsuarioDao {
                     msg.setId(r.getInt("id"));
                     msg.setDestinatario(r.getString("destinatario"));
                     msg.setRemetente(r.getString("remetente"));
-                    msg.setTexto(r.getBytes("mensagem"));
+                    byte[] textoCrip = r.getBytes("texto");
+                    String textoDescrip = new String(aes.descriptografarArquivo(textoCrip),"ISO-8859-1");
+                    msg.setTexto(textoDescrip);
                     resultado.add(msg);
                 }
                 con.close();

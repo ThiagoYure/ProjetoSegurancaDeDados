@@ -14,14 +14,14 @@ import java.util.Objects;
  */
 public class Mensagem {
     private int id;
-    private byte[] texto;
+    private String texto;
     private String remetente;
     private String destinatario;
 
     public Mensagem() {
     }
 
-    public Mensagem(int id, byte[] texto, String remetente, String destinatario) {
+    public Mensagem(int id, String texto, String remetente, String destinatario) {
         this.id = id;
         this.texto = texto;
         this.remetente = remetente;
@@ -36,11 +36,11 @@ public class Mensagem {
         this.id = id;
     }
 
-    public byte[] getTexto() {
+    public String getTexto() {
         return texto;
     }
 
-    public void setTexto(byte[] texto) {
+    public void setTexto(String texto) {
         this.texto = texto;
     }
 
@@ -63,10 +63,10 @@ public class Mensagem {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + this.id;
-        hash = 59 * hash + Arrays.hashCode(this.texto);
-        hash = 59 * hash + Objects.hashCode(this.remetente);
-        hash = 59 * hash + Objects.hashCode(this.destinatario);
+        hash = 29 * hash + this.id;
+        hash = 29 * hash + Objects.hashCode(this.texto);
+        hash = 29 * hash + Objects.hashCode(this.remetente);
+        hash = 29 * hash + Objects.hashCode(this.destinatario);
         return hash;
     }
 
@@ -85,23 +85,17 @@ public class Mensagem {
         if (this.id != other.id) {
             return false;
         }
+        if (!Objects.equals(this.texto, other.texto)) {
+            return false;
+        }
         if (!Objects.equals(this.remetente, other.remetente)) {
             return false;
         }
         if (!Objects.equals(this.destinatario, other.destinatario)) {
             return false;
         }
-        if (!Arrays.equals(this.texto, other.texto)) {
-            return false;
-        }
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Mensagem{" + "id=" + id + ", texto=" + texto + ", remetente=" + remetente + ", destinatario=" + destinatario + '}';
-    }
-
-    
-    
+       
 }
