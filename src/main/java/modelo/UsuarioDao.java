@@ -4,13 +4,21 @@
  * and open the template in the editor.
  */
 package modelo;
+
 import criptografia.ExemploAES;
+import criptografia.ExemploRSA;
 import factory.ConFactory;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,11 +75,12 @@ public class UsuarioDao {
         return null;
     }
 
-    public ArrayList<Usuario> readUsuarios() {
+    public ArrayList<Usuario> readUsuarios(String usuario) {
 
         try {
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("SELECT * FROM usuario");
+                PreparedStatement st = con.prepareStatement("SELECT * FROM usuario where not email = ?");
+                st.setString(1,usuario );
                 ResultSet r = st.executeQuery();
                 ArrayList<Usuario> resultado = new ArrayList<>();
                 while (r.next()) {
@@ -94,22 +103,33 @@ public class UsuarioDao {
     public boolean createMessagem(String destinatario, String remetente, String texto) throws Exception {
         try {
             int retorno;
+            ExemploRSA rsa = new ExemploRSA();
             ExemploAES aes = new ExemploAES();
-            try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("INSERT INTO mensagem (destinatario,remetente,"
-                        + "texto) VALUES(?,?,?)");
+            byte[] chavecriptada = readpk(destinatario);
+            byte[] publicKeyBytes = aes.descriptografarArquivo(chavecriptada);
+            byte[] chavecriptadauser = readpk(remetente);
+            byte[] publicKeyBytesuser = aes.descriptografarArquivo(chavecriptadauser);
+            KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
+            //PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+            PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+            PublicKey publicKeyuser = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytesuser));
+            try (Connection con = ConFactory.getConnection(); PreparedStatement st = con.prepareStatement("INSERT INTO mensagem (destinatario,remetente,"
+                    + "texto) VALUES(?,?,?)")) {
                 st.setString(1, destinatario);
                 st.setString(2, remetente);
-                byte[] textoCrip = aes.criptografarArquivo(texto.getBytes());
+                byte[] textoCrip = rsa.criptografarMensagem(texto.getBytes(), publicKey);
                 st.setBytes(3, textoCrip);
                 retorno = st.executeUpdate();
-                st.close();
             }
-            if (retorno > 0) {
-                return true;
-            } else {
-                return false;
+            try (Connection con = ConFactory.getConnection(); PreparedStatement st = con.prepareStatement("INSERT INTO mensagem (destinatario,remetente,"
+                    + "texto) VALUES(?,?,?)")) {
+                st.setString(1, destinatario);
+                st.setString(2, remetente);
+                byte[] textoCrip = rsa.criptografarMensagem(texto.getBytes(), publicKeyuser);
+                st.setBytes(3, textoCrip);
+                retorno = st.executeUpdate();
             }
+            return retorno > 0;
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -121,7 +141,7 @@ public class UsuarioDao {
 
         try {
             try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE (destinatario = ? or remetente = ?)and(destinatario = ? or remetente = ?) order by id asc");
+                PreparedStatement st = con.prepareStatement("SELECT * FROM mensagem WHERE (destinatario = ? or remetente = ?)and(remetente = ? or destinatario = ?) order by id asc");
                 st.setString(1, usuario);
                 st.setString(2, usuario);
                 st.setString(3, contato);
@@ -129,16 +149,25 @@ public class UsuarioDao {
                 ExemploAES aes = new ExemploAES();
                 ArrayList<Mensagem> resultado = new ArrayList<>();
                 ResultSet r = st.executeQuery();
+                ExemploRSA rsa = new ExemploRSA();
+                byte[] chavecriptada = readprivk(usuario);
+                byte[] privateKeyBytes = aes.descriptografarArquivo(chavecriptada);
+                KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
+                PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+                //PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
                 while (r.next()) {
                     Mensagem msg = new Mensagem();
                     msg.setId(r.getInt("id"));
                     msg.setDestinatario(r.getString("destinatario"));
                     msg.setRemetente(r.getString("remetente"));
                     byte[] textoCrip = r.getBytes("texto");
-                    String textoDescrip = new String(aes.descriptografarArquivo(textoCrip),"ISO-8859-1");
-                    msg.setTexto(textoDescrip);
-                    System.out.println(textoDescrip);
-                    resultado.add(msg);
+                    try {
+                        byte[] textoDescrip = rsa.descriptografarMensagem(textoCrip, privateKey);
+                        msg.setTexto(new String(textoDescrip));
+                        resultado.add(msg);
+                    } catch (Exception e) {
+                    }
+
                 }
                 con.close();
                 st.close();
@@ -177,19 +206,12 @@ public class UsuarioDao {
         System.out.println("oi");
         try {
             int retorno;
-            try (Connection con = ConFactory.getConnection()) {
-                PreparedStatement st = con.prepareStatement("INSERT INTO privkusers (key_priv,usuario) VALUES(?,?)");
+            try (Connection con = ConFactory.getConnection(); PreparedStatement st = con.prepareStatement("INSERT INTO privkusers (key_priv,usuario) VALUES(?,?)")) {
                 st.setBytes(1, privk);
                 st.setString(2, email);
                 retorno = st.executeUpdate();
-                st.close();
             }
-            if(retorno>0){
-               return true; 
-            }else{
-                return false;
-            }
-            
+            return retorno > 0;
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,9 +227,13 @@ public class UsuarioDao {
                 PreparedStatement st = con.prepareStatement("SELECT * FROM pkusers WHERE usuario = ?");
                 st.setString(1, email);
                 ResultSet r = st.executeQuery();
-                con.close();
-                st.close();
-                return r.getBytes("key_pub");
+                if (r.next()) {
+                    byte[] retorno = r.getBytes("key_pub");
+                    con.close();
+                    st.close();
+                    return retorno;
+                }
+                return null;
 
             }
         } catch (SQLException | ClassNotFoundException ex) {
@@ -215,6 +241,7 @@ public class UsuarioDao {
         }
         return null;
     }
+
     public byte[] readprivk(String email) {
 
         try {
@@ -222,9 +249,14 @@ public class UsuarioDao {
                 PreparedStatement st = con.prepareStatement("SELECT * FROM privkusers WHERE usuario = ?");
                 st.setString(1, email);
                 ResultSet r = st.executeQuery();
-                con.close();
-                st.close();
-                return r.getBytes("key_priv");
+                if (r.next()) {
+                    byte[] retorno = r.getBytes("key_priv");
+                    System.out.println(Arrays.toString(retorno));
+                    con.close();
+                    st.close();
+                    return retorno;
+                }
+                return null;
 
             }
         } catch (SQLException | ClassNotFoundException ex) {

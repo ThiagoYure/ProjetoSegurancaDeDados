@@ -45,7 +45,7 @@ class CadastroController implements Command {
             Usuario novoUser = new Usuario(email, senhaCriptografada, nick);
             UsuarioDao dao = new UsuarioDao();
             if (email.equals("") || nick.equals("") || senha.equals("")) {
-                res.sendRedirect("cadastro.jsp?msg='Campos vazios...'");
+                res.sendRedirect("cadastro.jsp?msg="+"Campos vazios");
             } else {
                 if (dao.read(email) == null) {
                     if (dao.create(novoUser)) {
@@ -55,10 +55,10 @@ class CadastroController implements Command {
                         boolean createPrivKey = dao.createPrivKey(prk, email);
                         res.sendRedirect("index.jsp");
                     } else {
-                        res.sendRedirect("cadastro.jsp?msg='Falha ao criar nova conta...Recarregue a página e tente novamente.'");
+                        res.sendRedirect("cadastro.jsp?msg=Falha ao criar nova conta...Recarregue a pagina e tente novamente.'");
                     }
                 } else {
-                    res.sendRedirect("cadastro.jsp?msg='Já existe um usuario vinculado a este email...'");
+                    res.sendRedirect("cadastro.jsp?msg="+"Ja existe um usuario vinculado a este email");
                 }
             }
         } catch (Exception ex) {

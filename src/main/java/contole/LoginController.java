@@ -36,8 +36,10 @@ public class LoginController implements Command {
         dao = new UsuarioDao();
         Usuario user = dao.read(email);
         ExemploHash hash = new ExemploHash();
-        if (user == null) {
-            res.sendRedirect("index.jsp?error='Não há nenhum usuario cadastrado com esse email e senha.'");
+        if (email.equals("") || senha.equals("")) {
+            res.sendRedirect("index.jsp?msg=Campos vazios");
+        } else if (user == null) {
+            res.sendRedirect("index.jsp?msg=Nao ha nenhum usuario cadastrado com esse email e senha");
         } else {
             System.out.println(user.getEmail());
             System.out.println(hash.byteToString(user.getSenha()));
@@ -50,7 +52,7 @@ public class LoginController implements Command {
                     System.out.println(session.getAttribute("user"));
                     res.sendRedirect("inicial.jsp");
                 } else {
-                    res.sendRedirect("index.jsp?error='Dados incorretos...'");
+                    res.sendRedirect("index.jsp?error=Dados incorretos...");
                 }
             } catch (Exception ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);

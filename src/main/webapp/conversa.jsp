@@ -16,33 +16,60 @@
         <title>Principal</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
-    <body class="light-blue accent-3">
-        <ul class="collection">
-            <MyTags:Mensagens usuario="${user.email}" destinatario="${param.emailCont}"/>
-            <c:forEach var='mensagem' items='${Mensagens}'>
-                <li class='collection-item avatar amber darken-3 white-text'>
-                    <p> <b></b>${mensagem.remetente}</br>
-                        <b></b> ${mensagem.texto}</br>
-                    </p>
-                </li>
-                <div class="divider"></div>
-            </c:forEach>
-        </ul>
-        <form class="col s12" action="FrontController" method="POST">
-            <div class="row">
-                <div class="input-field col s12">
-                    <input name="texto" type="text" class="validate">
+    <body class="yellow">
+        <%@include file="menu.jsp" %>
+        <div class='container'>
+            <div class='row'>
+                <div class='col s6 offset-s3'>
+                    <div class='light-blue darken-1' style='border-radius: 10px'><h3 class=" center white-text">${param.emailCont}</h3></div><div class='light-blue darken-1 divider'></div></br>
+                    <div class="row">
+                        <MyTags:Mensagens usuario="${user.email}" destinatario="${param.emailCont}"/>
+                        <c:forEach var='mensagem' items='${Mensagens}'>
+                            <c:choose>
+                                <c:when test="${mensagem.remetente eq user.email}">
+                                    <div class="row">
+                                        <div class=' col s6 offset-s6 card light-blue darken-1 white-text'>
+                                            <p> <b class='yellow-text'>${mensagem.remetente}</b></br>
+                                                ${mensagem.texto}</br>
+                                            </p>
+                                        </div>
+                                    </div></br>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="row">
+                                        <div class=' col s6 card light-blue darken-1 white-text'>
+                                            <p> <b class='yellow-text'>${mensagem.remetente}</b></br>
+                                                ${mensagem.texto}</br>
+                                            </p>
+                                        </div></br>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose> 
+                        </c:forEach>
+                    </div>
                 </div>
-            </div>
-            <div class="row center-align">
-                <input class="light-blue waves-effect waves-light btn" type="submit" value="Enviar">
-            </div>
-            <div class="row">
-                <div class="input-field col s12"><input type="hidden" name="controller" value="EnviarMensagem"></div>
-                <div class="input-field col s12"><input type="hidden" name="destinatario" value="${param.emailCont}"></div>
+            </div>                    
+            <div class='row'>
+                <form class="col s6 offset-s3" action="FrontController" method="POST">
+                    <div class="row">
+                        <div class="input-field col s12 white" style='border-radius: 10px'>
+                            <textarea id="texto" name='texto' class="materialize-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class='row red-text'>
+                        <span>${param.msg}</span>
+                    </div>
+                    <div class="row center-align">
+                        <input class="light-blue waves-effect waves-light btn" type="submit" value="Enviar">
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12"><input type="hidden" name="controller" value="EnviarMensagem"></div>
+                        <div class="input-field col s12"><input type="hidden" name="destinatario" value="${param.emailCont}"></div>
 
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {

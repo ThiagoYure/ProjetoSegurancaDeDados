@@ -28,7 +28,9 @@ class EnviarMensagemController implements Command{
         String texto = req.getParameter("texto");
         String destinatario = req.getParameter("destinatario");
         HttpSession s = req.getSession();
-        String remetente = ((Usuario) s.getAttribute("user")).getEmail();       
+        Usuario user = (Usuario) s.getAttribute("user");
+        String remetente = user.getEmail();  
+        System.out.println(user.getEmail());
         UsuarioDao dao = new UsuarioDao();
         try {
             dao.createMessagem(destinatario, remetente, texto);

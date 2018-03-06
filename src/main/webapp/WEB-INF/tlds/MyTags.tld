@@ -22,12 +22,18 @@
     -->
   <tag>
     <name>Contatos</name>
-    <tag-class>handlers.Contatos</tag-class>
+    <tag-class>Handlers.Contatos</tag-class>
     <body-content>scriptless</body-content>
+    <attribute>
+      <name>email</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
   <tag>
     <name>Mensagens</name>
-    <tag-class>handlers.Mensagens</tag-class>
+    <tag-class>Handlers.Mensagens</tag-class>
     <body-content>scriptless</body-content>
     <attribute>
       <name>usuario</name>
