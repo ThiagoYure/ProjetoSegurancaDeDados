@@ -1,3 +1,4 @@
+lembre-se de ao criar o database no postgresql, colocar o nome dele e a senha do banco no arquivo conFactory do projeto, onde está indicado.
 create database MeChama;
 
 create table usuario (

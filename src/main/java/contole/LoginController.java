@@ -41,15 +41,11 @@ public class LoginController implements Command {
         } else if (user == null) {
             res.sendRedirect("index.jsp?msg=Nao ha nenhum usuario cadastrado com esse email e senha");
         } else {
-            System.out.println(user.getEmail());
-            System.out.println(hash.byteToString(user.getSenha()));
             try {
                 String senhatest = hash.byteToString(hash.gerarHashString(senha.getBytes(), "MD5"));
-                System.out.println(senhatest);
                 if (user.getEmail().equals(email) && senhatest.equals(hash.byteToString(user.getSenha()))) {
                     HttpSession session = req.getSession();
                     session.setAttribute("user", user);
-                    System.out.println(session.getAttribute("user"));
                     res.sendRedirect("inicial.jsp");
                 } else {
                     res.sendRedirect("index.jsp?error=Dados incorretos...");

@@ -251,7 +251,6 @@ public class UsuarioDao {
                 ResultSet r = st.executeQuery();
                 if (r.next()) {
                     byte[] retorno = r.getBytes("key_priv");
-                    System.out.println(Arrays.toString(retorno));
                     con.close();
                     st.close();
                     return retorno;

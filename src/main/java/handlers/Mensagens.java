@@ -29,7 +29,6 @@ public class Mensagens extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException {
         UsuarioDao dao = new UsuarioDao();
-        System.out.println("oi");
         try {        
             getJspContext().setAttribute("Mensagens", dao.readMensagens(usuario, destinatario));
         } catch (Exception ex) {

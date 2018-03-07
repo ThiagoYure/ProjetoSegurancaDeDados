@@ -36,7 +36,6 @@ public class FrontController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
         String controller = request.getParameter("controller");
-        System.out.println(controller);
         if (controller.equals("Login")) {
             LoginController command = new LoginController();
             command.execute(request, response);
